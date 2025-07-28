@@ -95,17 +95,29 @@ const AdminDashboard = ({ onLogout }) => {
   });
 
   const handleAddProduct = () => {
-    if (newProduct.name && newProduct.price) {
-      const product = {
-        id: Date.now(),
-        ...newProduct,
-        price: parseFloat(newProduct.price),
-        stock: parseInt(newProduct.stock)
-      };
-      addProduct(product);
-      setNewProduct({ name: '', price: '', category: 'فسيخ', stock: '', image: '🐟', description: '', unit: 'كيلو' });
-      setShowAddProduct(false);
+    if (!newProduct.name.trim()) {
+      alert('يرجى إدخال اسم المنتج');
+      return;
     }
+    if (!newProduct.price || parseFloat(newProduct.price) <= 0) {
+      alert('يرجى إدخال سعر صحيح');
+      return;
+    }
+    if (!newProduct.stock || parseInt(newProduct.stock) < 0) {
+      alert('يرجى إدخال مخزون صحيح');
+      return;
+    }
+
+    const product = {
+      id: Date.now(),
+      ...newProduct,
+      name: newProduct.name.trim(),
+      price: parseFloat(newProduct.price),
+      stock: parseInt(newProduct.stock)
+    };
+    addProduct(product);
+    setNewProduct({ name: '', price: '', category: 'فسيخ', stock: '', image: '🐟', description: '', unit: 'كيلو' });
+    setShowAddProduct(false);
   };
 
   const handleEditProduct = (product) => {
@@ -123,23 +135,35 @@ const AdminDashboard = ({ onLogout }) => {
   };
 
   const handleUpdateProduct = () => {
-    if (editingProduct && newProduct.name && newProduct.price) {
-      const updatedProduct = {
-        ...editingProduct,
-        name: newProduct.name,
-        price: parseFloat(newProduct.price),
-        category: newProduct.category,
-        stock: parseInt(newProduct.stock),
-        image: newProduct.image,
-        description: newProduct.description,
-        unit: newProduct.unit
-      };
-      
-      updateProduct(updatedProduct);
-      setEditingProduct(null);
-      setNewProduct({ name: '', price: '', category: 'فسيخ', stock: '', image: '🐟', description: '', unit: 'كيلو' });
-      setShowAddProduct(false);
+    if (!editingProduct) return;
+    
+    if (!newProduct.name.trim()) {
+      alert('يرجى إدخال اسم المنتج');
+      return;
     }
+    if (!newProduct.price || parseFloat(newProduct.price) <= 0) {
+      alert('يرجى إدخال سعر صحيح');
+      return;
+    }
+    if (!newProduct.stock || parseInt(newProduct.stock) < 0) {
+      alert('يرجى إدخال مخزون صحيح');
+      return;
+    }
+
+    const updates = {
+      name: newProduct.name.trim(),
+      price: parseFloat(newProduct.price),
+      category: newProduct.category,
+      stock: parseInt(newProduct.stock),
+      image: newProduct.image,
+      description: newProduct.description,
+      unit: newProduct.unit
+    };
+    
+    updateProduct(editingProduct.id, updates);
+    setEditingProduct(null);
+    setNewProduct({ name: '', price: '', category: 'فسيخ', stock: '', image: '🐟', description: '', unit: 'كيلو' });
+    setShowAddProduct(false);
   };
 
   const handleCancelEdit = () => {
@@ -153,15 +177,29 @@ const AdminDashboard = ({ onLogout }) => {
   };
 
   const handleAddBranch = () => {
-    if (newBranch.name && newBranch.address && newBranch.phone) {
-      const branch = {
-        id: Date.now(),
-        ...newBranch
-      };
-      addBranch(branch);
-      setNewBranch({ name: '', address: '', phone: '', whatsapp: '', hours: '', delivery: true });
-      setShowAddBranch(false);
+    if (!newBranch.name.trim()) {
+      alert('يرجى إدخال اسم الفرع');
+      return;
     }
+    if (!newBranch.address.trim()) {
+      alert('يرجى إدخال عنوان الفرع');
+      return;
+    }
+    if (!newBranch.phone.trim()) {
+      alert('يرجى إدخال رقم الهاتف');
+      return;
+    }
+
+    const branch = {
+      id: Date.now(),
+      ...newBranch,
+      name: newBranch.name.trim(),
+      address: newBranch.address.trim(),
+      phone: newBranch.phone.trim()
+    };
+    addBranch(branch);
+    setNewBranch({ name: '', address: '', phone: '', whatsapp: '', hours: '', delivery: true });
+    setShowAddBranch(false);
   };
 
   const handleAddSocial = () => {
@@ -186,6 +224,77 @@ const AdminDashboard = ({ onLogout }) => {
 
   const handleDeleteSocial = (id) => {
     deleteSocialLink(id);
+  };
+
+  // وظائف التعديل للفروع
+  const handleEditBranch = (branch) => {
+    setEditingBranch(branch);
+    setNewBranch({
+      name: branch.name,
+      address: branch.address,
+      phone: branch.phone,
+      whatsapp: branch.whatsapp || '',
+      hours: branch.hours,
+      delivery: branch.delivery
+    });
+    setShowAddBranch(true);
+  };
+
+  const handleUpdateBranch = () => {
+    if (!editingBranch) return;
+    
+    if (!newBranch.name.trim()) {
+      alert('يرجى إدخال اسم الفرع');
+      return;
+    }
+    if (!newBranch.address.trim()) {
+      alert('يرجى إدخال عنوان الفرع');
+      return;
+    }
+    if (!newBranch.phone.trim()) {
+      alert('يرجى إدخال رقم الهاتف');
+      return;
+    }
+
+    const updates = {
+      name: newBranch.name.trim(),
+      address: newBranch.address.trim(),
+      phone: newBranch.phone.trim(),
+      whatsapp: newBranch.whatsapp,
+      hours: newBranch.hours,
+      delivery: newBranch.delivery
+    };
+    
+    updateBranch(editingBranch.id, updates);
+    setEditingBranch(null);
+    setNewBranch({ name: '', address: '', phone: '', whatsapp: '', hours: '', delivery: true });
+    setShowAddBranch(false);
+  };
+
+  // وظائف التعديل للروابط الاجتماعية
+  const handleEditSocial = (social) => {
+    setEditingSocial(social);
+    setNewSocial({
+      platform: social.platform,
+      link: social.link,
+      icon: social.icon
+    });
+    setShowAddSocial(true);
+  };
+
+  const handleUpdateSocial = () => {
+    if (editingSocial && newSocial.platform && newSocial.link) {
+      const updates = {
+        platform: newSocial.platform,
+        link: newSocial.link,
+        icon: newSocial.icon
+      };
+      
+      updateSocialLink(editingSocial.id, updates);
+      setEditingSocial(null);
+      setNewSocial({ platform: '', link: '', icon: '' });
+      setShowAddSocial(false);
+    }
   };
 
   const renderProducts = () => (
@@ -351,7 +460,10 @@ const AdminDashboard = ({ onLogout }) => {
                 <p className="text-sm text-gray-600">{branch.address}</p>
               </div>
               <div className="flex gap-1">
-                <button className="p-1 text-blue-600 hover:bg-blue-50 rounded">
+                <button 
+                  onClick={() => handleEditBranch(branch)}
+                  className="p-1 text-blue-600 hover:bg-blue-50 rounded"
+                >
                   <Edit3 className="w-4 h-4" />
                 </button>
                 <button 
@@ -377,11 +489,13 @@ const AdminDashboard = ({ onLogout }) => {
         ))}
       </div>
 
-      {/* Add Branch Modal */}
+      {/* Add/Edit Branch Modal */}
       {showAddBranch && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <h3 className="text-lg font-bold mb-4">إضافة فرع جديد</h3>
+            <h3 className="text-lg font-bold mb-4">
+              {editingBranch ? 'تعديل الفرع' : 'إضافة فرع جديد'}
+            </h3>
             <div className="space-y-4">
               <input
                 type="text"
@@ -421,13 +535,17 @@ const AdminDashboard = ({ onLogout }) => {
             </div>
             <div className="flex gap-2 mt-6">
               <button
-                onClick={handleAddBranch}
+                onClick={editingBranch ? handleUpdateBranch : handleAddBranch}
                 className="flex-1 bg-blue-600 text-white py-2 rounded-lg"
               >
-                إضافة
+                {editingBranch ? 'تحديث' : 'إضافة'}
               </button>
               <button
-                onClick={() => setShowAddBranch(false)}
+                onClick={() => {
+                  setEditingBranch(null);
+                  setNewBranch({ name: '', address: '', phone: '', whatsapp: '', hours: '', delivery: true });
+                  setShowAddBranch(false);
+                }}
                 className="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg"
               >
                 إلغاء
@@ -464,7 +582,10 @@ const AdminDashboard = ({ onLogout }) => {
                 <p className="text-sm text-gray-600 truncate">{social.link}</p>
               </div>
               <div className="flex gap-1">
-                <button className="p-1 text-blue-600 hover:bg-blue-50 rounded">
+                <button 
+                  onClick={() => handleEditSocial(social)}
+                  className="p-1 text-blue-600 hover:bg-blue-50 rounded"
+                >
                   <Edit3 className="w-4 h-4" />
                 </button>
                 <button 
@@ -479,11 +600,13 @@ const AdminDashboard = ({ onLogout }) => {
         ))}
       </div>
 
-      {/* Add Social Modal */}
+      {/* Add/Edit Social Modal */}
       {showAddSocial && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <h3 className="text-lg font-bold mb-4">إضافة رابط اجتماعي</h3>
+            <h3 className="text-lg font-bold mb-4">
+              {editingSocial ? 'تعديل الرابط الاجتماعي' : 'إضافة رابط اجتماعي'}
+            </h3>
             <div className="space-y-4">
               <input
                 type="text"
@@ -509,13 +632,17 @@ const AdminDashboard = ({ onLogout }) => {
             </div>
             <div className="flex gap-2 mt-6">
               <button
-                onClick={handleAddSocial}
+                onClick={editingSocial ? handleUpdateSocial : handleAddSocial}
                 className="flex-1 bg-blue-600 text-white py-2 rounded-lg"
               >
-                إضافة
+                {editingSocial ? 'تحديث' : 'إضافة'}
               </button>
               <button
-                onClick={() => setShowAddSocial(false)}
+                onClick={() => {
+                  setEditingSocial(null);
+                  setNewSocial({ platform: '', link: '', icon: '' });
+                  setShowAddSocial(false);
+                }}
                 className="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg"
               >
                 إلغاء
