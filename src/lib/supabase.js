@@ -12,6 +12,12 @@ console.log('🔧 تهيئة Supabase...')
 console.log('URL:', supabaseUrl ? '✅ موجود' : '❌ مفقود')
 console.log('Key:', supabaseAnonKey ? '✅ موجود' : '❌ مفقود')
 
+// التحقق من صحة القيم
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('❌ خطأ: قيم Supabase غير صحيحة')
+  throw new Error('Supabase configuration is invalid')
+}
+
 // إنشاء Supabase client
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
