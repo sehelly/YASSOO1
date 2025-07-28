@@ -17,6 +17,7 @@ import {
   BarChart3,
   FileText
 } from 'lucide-react';
+import { useAdminStore } from '../store/adminStore';
 
 const AdminDashboard = ({ onLogout }) => {
   const [activeTab, setActiveTab] = useState('stats');
@@ -24,44 +25,23 @@ const AdminDashboard = ({ onLogout }) => {
   const [showAddBranch, setShowAddBranch] = useState(false);
   const [showAddSocial, setShowAddSocial] = useState(false);
 
-  // بيانات تجريبية
-  const [products, setProducts] = useState([
-    { id: 1, name: 'فسيخ', price: 120, image: '🐟', category: 'أسماك مملحة', stock: 50 },
-    { id: 2, name: 'بطارخ رنجة', price: 80, image: '🐠', category: 'أسماك مملحة', stock: 30 },
-    { id: 3, name: 'ملوحة', price: 60, image: '🦐', category: 'أسماك مملحة', stock: 40 },
-  ]);
-
-  const [branches, setBranches] = useState([
-    { id: 1, name: 'الفرع الرئيسي', address: 'شارع النيل، القاهرة', phone: '01012345678', delivery: true },
-    { id: 2, name: 'فرع المعادي', address: 'شارع 9، المعادي', phone: '01087654321', delivery: true },
-  ]);
-
-  const [socialLinks, setSocialLinks] = useState([
-    { id: 1, platform: 'WhatsApp', link: 'https://wa.me/201012345678', icon: '📱' },
-    { id: 2, platform: 'Facebook', link: 'https://facebook.com/yaso.fish', icon: '📘' },
-    { id: 3, platform: 'TikTok', link: 'https://tiktok.com/@yaso.fish', icon: '🎵' },
-  ]);
-
-  const [newProduct, setNewProduct] = useState({
-    name: '',
-    price: '',
-    category: 'أسماك مملحة',
-    stock: '',
-    image: '🐟'
-  });
-
-  const [newBranch, setNewBranch] = useState({
-    name: '',
-    address: '',
-    phone: '',
-    delivery: true
-  });
-
-  const [newSocial, setNewSocial] = useState({
-    platform: '',
-    link: '',
-    icon: ''
-  });
+  // استخدام المتجر المركزي
+  const {
+    products,
+    branches,
+    socialLinks,
+    siteSettings,
+    addProduct,
+    updateProduct,
+    deleteProduct,
+    addBranch,
+    updateBranch,
+    deleteBranch,
+    addSocialLink,
+    updateSocialLink,
+    deleteSocialLink,
+    updateSiteSettings
+  } = useAdminStore();
 
   // حالات التعديل
   const [editingProduct, setEditingProduct] = useState(null);
@@ -71,6 +51,31 @@ const AdminDashboard = ({ onLogout }) => {
   // إيموجي للاختيار
   const emojis = ['🐟', '🐠', '🐡', '🦐', '🦀', '🐙', '🦑', '🐋', '🐳', '🐬'];
 
+  const [newProduct, setNewProduct] = useState({
+    name: '',
+    price: '',
+    category: 'فسيخ',
+    stock: '',
+    image: '🐟',
+    description: '',
+    unit: 'كيلو'
+  });
+
+  const [newBranch, setNewBranch] = useState({
+    name: '',
+    address: '',
+    phone: '',
+    whatsapp: '',
+    hours: '',
+    delivery: true
+  });
+
+  const [newSocial, setNewSocial] = useState({
+    platform: '',
+    link: '',
+    icon: ''
+  });
+
   const handleAddProduct = () => {
     if (newProduct.name && newProduct.price) {
       const product = {
@@ -79,8 +84,8 @@ const AdminDashboard = ({ onLogout }) => {
         price: parseFloat(newProduct.price),
         stock: parseInt(newProduct.stock)
       };
-      setProducts([...products, product]);
-      setNewProduct({ name: '', price: '', category: 'أسماك مملحة', stock: '', image: '🐟' });
+      addProduct(product);
+      setNewProduct({ name: '', price: '', category: 'فسيخ', stock: '', image: '🐟', description: '', unit: 'كيلو' });
       setShowAddProduct(false);
     }
   };
@@ -92,7 +97,9 @@ const AdminDashboard = ({ onLogout }) => {
       price: product.price.toString(),
       category: product.category,
       stock: product.stock.toString(),
-      image: product.image
+      image: product.image,
+      description: product.description,
+      unit: product.unit
     });
     setShowAddProduct(true);
   };
@@ -105,19 +112,21 @@ const AdminDashboard = ({ onLogout }) => {
         price: parseFloat(newProduct.price),
         category: newProduct.category,
         stock: parseInt(newProduct.stock),
-        image: newProduct.image
+        image: newProduct.image,
+        description: newProduct.description,
+        unit: newProduct.unit
       };
       
-      setProducts(products.map(p => p.id === editingProduct.id ? updatedProduct : p));
+      updateProduct(updatedProduct);
       setEditingProduct(null);
-      setNewProduct({ name: '', price: '', category: 'أسماك مملحة', stock: '', image: '🐟' });
+      setNewProduct({ name: '', price: '', category: 'فسيخ', stock: '', image: '🐟', description: '', unit: 'كيلو' });
       setShowAddProduct(false);
     }
   };
 
   const handleCancelEdit = () => {
     setEditingProduct(null);
-    setNewProduct({ name: '', price: '', category: 'أسماك مملحة', stock: '', image: '🐟' });
+    setNewProduct({ name: '', price: '', category: 'فسيخ', stock: '', image: '🐟', description: '', unit: 'كيلو' });
     setShowAddProduct(false);
   };
 
@@ -131,8 +140,8 @@ const AdminDashboard = ({ onLogout }) => {
         id: Date.now(),
         ...newBranch
       };
-      setBranches([...branches, branch]);
-      setNewBranch({ name: '', address: '', phone: '', delivery: true });
+      addBranch(branch);
+      setNewBranch({ name: '', address: '', phone: '', whatsapp: '', hours: '', delivery: true });
       setShowAddBranch(false);
     }
   };
@@ -143,22 +152,22 @@ const AdminDashboard = ({ onLogout }) => {
         id: Date.now(),
         ...newSocial
       };
-      setSocialLinks([...socialLinks, social]);
+      addSocialLink(social);
       setNewSocial({ platform: '', link: '', icon: '' });
       setShowAddSocial(false);
     }
   };
 
-  const deleteProduct = (id) => {
-    setProducts(products.filter(p => p.id !== id));
+  const handleDeleteProduct = (id) => {
+    deleteProduct(id);
   };
 
-  const deleteBranch = (id) => {
-    setBranches(branches.filter(b => b.id !== id));
+  const handleDeleteBranch = (id) => {
+    deleteBranch(id);
   };
 
-  const deleteSocial = (id) => {
-    setSocialLinks(socialLinks.filter(s => s.id !== id));
+  const handleDeleteSocial = (id) => {
+    deleteSocialLink(id);
   };
 
   const renderProducts = () => (
@@ -194,7 +203,7 @@ const AdminDashboard = ({ onLogout }) => {
                   <Edit3 className="w-4 h-4" />
                 </button>
                 <button 
-                  onClick={() => deleteProduct(product.id)}
+                  onClick={() => handleDeleteProduct(product.id)}
                   className="p-1 text-red-600 hover:bg-red-50 rounded"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -242,6 +251,20 @@ const AdminDashboard = ({ onLogout }) => {
                 placeholder="المخزون"
                 value={newProduct.stock}
                 onChange={(e) => setNewProduct({...newProduct, stock: e.target.value})}
+                className="w-full p-3 border rounded-lg"
+              />
+              <input
+                type="text"
+                placeholder="وصف المنتج"
+                value={newProduct.description}
+                onChange={(e) => setNewProduct({...newProduct, description: e.target.value})}
+                className="w-full p-3 border rounded-lg"
+              />
+              <input
+                type="text"
+                placeholder="وحدة القياس"
+                value={newProduct.unit}
+                onChange={(e) => setNewProduct({...newProduct, unit: e.target.value})}
                 className="w-full p-3 border rounded-lg"
               />
               <div className="space-y-2">
@@ -314,7 +337,7 @@ const AdminDashboard = ({ onLogout }) => {
                   <Edit3 className="w-4 h-4" />
                 </button>
                 <button 
-                  onClick={() => deleteBranch(branch.id)}
+                  onClick={() => handleDeleteBranch(branch.id)}
                   className="p-1 text-red-600 hover:bg-red-50 rounded"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -361,6 +384,20 @@ const AdminDashboard = ({ onLogout }) => {
                 placeholder="رقم الهاتف"
                 value={newBranch.phone}
                 onChange={(e) => setNewBranch({...newBranch, phone: e.target.value})}
+                className="w-full p-3 border rounded-lg"
+              />
+              <input
+                type="text"
+                placeholder="رقم واتساب"
+                value={newBranch.whatsapp}
+                onChange={(e) => setNewBranch({...newBranch, whatsapp: e.target.value})}
+                className="w-full p-3 border rounded-lg"
+              />
+              <input
+                type="text"
+                placeholder="ساعات العمل"
+                value={newBranch.hours}
+                onChange={(e) => setNewBranch({...newBranch, hours: e.target.value})}
                 className="w-full p-3 border rounded-lg"
               />
             </div>
@@ -413,7 +450,7 @@ const AdminDashboard = ({ onLogout }) => {
                   <Edit3 className="w-4 h-4" />
                 </button>
                 <button 
-                  onClick={() => deleteSocial(social.id)}
+                  onClick={() => handleDeleteSocial(social.id)}
                   className="p-1 text-red-600 hover:bg-red-50 rounded"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -488,14 +525,16 @@ const AdminDashboard = ({ onLogout }) => {
               <label className="block text-sm font-medium text-gray-700 mb-2">اسم المتجر</label>
               <input
                 type="text"
-                defaultValue="ياسو - الأسماك المملحة"
+                defaultValue={siteSettings.name}
+                onChange={(e) => updateSiteSettings({ name: e.target.value })}
                 className="w-full p-3 border rounded-lg"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">وصف المتجر</label>
               <textarea
-                defaultValue="أجود الأسماك المملحة في مصر"
+                defaultValue={siteSettings.description}
+                onChange={(e) => updateSiteSettings({ description: e.target.value })}
                 className="w-full p-3 border rounded-lg"
                 rows="3"
               />
@@ -504,7 +543,8 @@ const AdminDashboard = ({ onLogout }) => {
               <label className="block text-sm font-medium text-gray-700 mb-2">رقم الهاتف الرئيسي</label>
               <input
                 type="text"
-                defaultValue="01012345678"
+                defaultValue={siteSettings.phone}
+                onChange={(e) => updateSiteSettings({ phone: e.target.value })}
                 className="w-full p-3 border rounded-lg"
               />
             </div>

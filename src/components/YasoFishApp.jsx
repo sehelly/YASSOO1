@@ -7,6 +7,7 @@ import CheckoutPage from './CheckoutPage';
 import NotificationsPage from './NotificationsPage';
 import AdminLogin from './AdminLogin';
 import ContactPage from './ContactPage';
+import { useAdminStore } from '../store/adminStore';
 
 const YasoFishApp = () => {
   const [currentPage, setCurrentPage] = useState('home');
@@ -22,169 +23,44 @@ const YasoFishApp = () => {
   const [selectedCategory, setSelectedCategory] = useState('الكل');
   const [AdminDashboardComponent, setAdminDashboardComponent] = useState(null);
 
-  // بيانات المنتجات المحدثة
-  const products = [
-    {
-      id: 1,
-      name: 'فسيخ بلدي درجة أولى',
-      price: 45,
-      originalPrice: 50,
-      unit: 'كيلو',
-      image: '🐟',
-      category: 'فسيخ',
-      description: 'فسيخ بلدي طازج ومملح بعناية فائقة، تم اصطياده من البحر الأبيض المتوسط',
-      rating: 4.8,
-      reviews: 156,
-      inStock: true,
-      discount: 10,
-      images: ['🐟', '🐠', '🐡'],
-      nutrition: { protein: '18g', fat: '12g', calories: '180' },
-      origin: 'الإسكندرية'
-    },
-    {
-      id: 2,
-      name: 'سردين مملح فاخر',
-      price: 35,
-      originalPrice: 40,
-      unit: 'كيلو',
-      image: '🐠',
-      category: 'سردين',
-      description: 'سردين مملح عالي الجودة ومعبأ في زيت الزيتون الطبيعي',
-      rating: 4.6,
-      reviews: 89,
-      inStock: true,
-      discount: 12,
-      images: ['🐠', '🐟', '🐡'],
-      nutrition: { protein: '20g', fat: '10g', calories: '165' },
-      origin: 'دمياط'
-    },
-    {
-      id: 3,
-      name: 'رنجة مدخنة مميزة',
-      price: 55,
-      originalPrice: 65,
-      unit: 'كيلو',
-      image: '🐡',
-      category: 'رنجة',
-      description: 'رنجة مدخنة بالطريقة التقليدية مع التوابل الطبيعية',
-      rating: 4.9,
-      reviews: 203,
-      inStock: true,
-      discount: 15,
-      images: ['🐡', '🐠', '🐟'],
-      nutrition: { protein: '22g', fat: '15g', calories: '210' },
-      origin: 'بورسعيد'
-    },
-    {
-      id: 4,
-      name: 'ملوحة بحرية طازجة',
-      price: 40,
-      originalPrice: 45,
-      unit: 'كيلو',
-      image: '🦐',
-      category: 'ملوحة',
-      description: 'مجموعة متنوعة من الملوحة البحرية الطازجة',
-      rating: 4.7,
-      reviews: 124,
-      inStock: true,
-      discount: 11,
-      images: ['🦐', '🦀', '🐙'],
-      nutrition: { protein: '16g', fat: '8g', calories: '140' },
-      origin: 'البحر الأحمر'
-    },
-    {
-      id: 5,
-      name: 'أنشوجة مملحة',
-      price: 60,
-      originalPrice: 70,
-      unit: 'كيلو',
-      image: '🐟',
-      category: 'أنشوجة',
-      description: 'أنشوجة مملحة فاخرة بالطريقة الإيطالية',
-      rating: 4.5,
-      reviews: 67,
-      inStock: false,
-      discount: 14,
-      images: ['🐟', '🐠'],
-      nutrition: { protein: '19g', fat: '11g', calories: '175' },
-      origin: 'البحر المتوسط'
-    },
-    {
-      id: 6,
-      name: 'سلمون مدخن',
-      price: 120,
-      originalPrice: 140,
-      unit: 'كيلو',
-      image: '🍣',
-      category: 'سلمون',
-      description: 'سلمون مدخن فاخر مستورد من النرويج',
-      rating: 4.9,
-      reviews: 89,
-      inStock: true,
-      discount: 14,
-      images: ['🍣', '🐟'],
-      nutrition: { protein: '25g', fat: '18g', calories: '250' },
-      origin: 'النرويج'
-    }
-  ];
+  // استخدام المتجر المركزي
+  const { products, branches, socialLinks, siteSettings } = useAdminStore();
 
+  // دوال إدارة لوحة التحكم
+  const handleAdminLogin = (adminData) => {
+    setAdminUser(adminData);
+    setShowAdminLogin(false);
+  };
+
+  const handleAdminLogout = () => {
+    setAdminUser(null);
+    setCurrentPage('home');
+  };
+
+  const handleShowAdminLogin = () => {
+    setShowAdminLogin(true);
+  };
+
+  const handleBackToSite = () => {
+    setShowAdminLogin(false);
+    setCurrentPage('home');
+  };
+
+  // تحميل AdminDashboard فقط عند الحاجة
+  useEffect(() => {
+    if (adminUser && !AdminDashboardComponent) {
+      import('./AdminDashboard').then(module => {
+        setAdminDashboardComponent(() => module.default);
+      }).catch(error => {
+        console.error('خطأ في تحميل لوحة التحكم:', error);
+      });
+    }
+  }, [adminUser, AdminDashboardComponent]);
+
+  // بيانات أساسية
   const categories = ['الكل', 'فسيخ', 'سردين', 'رنجة', 'ملوحة', 'أنشوجة', 'سلمون'];
 
-  // بيانات الطلبات التجريبية
-  const sampleOrders = [
-    {
-      id: 'ORD001',
-      date: '2024-12-15',
-      status: 'delivered',
-      total: 135,
-      items: [
-        { name: 'فسيخ بلدي', quantity: 2, price: 45 },
-        { name: 'رنجة مدخنة', quantity: 1, price: 55 }
-      ],
-      deliveryAddress: 'شارع الجلاء، المحلة الكبرى',
-      estimatedDelivery: '15:30'
-    },
-    {
-      id: 'ORD002',
-      date: '2024-12-14',
-      status: 'in_progress',
-      total: 75,
-      items: [
-        { name: 'سردين مملح', quantity: 2, price: 35 }
-      ],
-      deliveryAddress: 'شارع البحر، المحلة الكبرى',
-      estimatedDelivery: '16:00'
-    }
-  ];
-
-  useEffect(() => {
-    setOrders(sampleOrders);
-  }, []);
-
-  // إضافة الإشعارات
-  const sampleNotifications = [
-    {
-      id: 1,
-      title: 'تم تأكيد طلبك',
-      message: 'طلبك رقم ORD002 تم تأكيده وجاري التحضير',
-      time: '10 دقائق',
-      read: false,
-      type: 'order'
-    },
-    {
-      id: 2,
-      title: 'عرض خاص',
-      message: 'خصم 20% على جميع منتجات الرنجة لفترة محدودة',
-      time: 'ساعة',
-      read: false,
-      type: 'offer'
-    }
-  ];
-
-  useEffect(() => {
-    setNotifications(sampleNotifications);
-  }, []);
-
+  // دوال السلة والطلبات
   const addToCart = (product, quantity = 1) => {
     setCart(prev => {
       const existing = prev.find(item => item.id === product.id);
@@ -238,37 +114,6 @@ const YasoFishApp = () => {
     return filtered;
   };
 
-  // دوال إدارة لوحة التحكم
-  const handleAdminLogin = (adminData) => {
-    setAdminUser(adminData);
-    setShowAdminLogin(false);
-  };
-
-  const handleAdminLogout = () => {
-    setAdminUser(null);
-    setCurrentPage('home');
-  };
-
-  const handleShowAdminLogin = () => {
-    setShowAdminLogin(true);
-  };
-
-  const handleBackToSite = () => {
-    setShowAdminLogin(false);
-    setCurrentPage('home');
-  };
-
-  // تحميل AdminDashboard فقط عند الحاجة
-  useEffect(() => {
-    if (adminUser && !AdminDashboardComponent) {
-      import('./AdminDashboard').then(module => {
-        setAdminDashboardComponent(() => module.default);
-      }).catch(error => {
-        console.error('خطأ في تحميل لوحة التحكم:', error);
-      });
-    }
-  }, [adminUser, AdminDashboardComponent]);
-
   // واجهة البداية المحدثة
   const HomePage = () => (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
@@ -282,8 +127,8 @@ const YasoFishApp = () => {
               </div>
             )}
             <div>
-              <h1 className="text-2xl font-bold text-blue-800">ياسو</h1>
-              <p className="text-xs text-gray-600">أجود الأسماك المملحة</p>
+              <h1 className="text-2xl font-bold text-blue-800">{siteSettings.storeName}</h1>
+              <p className="text-xs text-gray-600">{siteSettings.storeDescription}</p>
             </div>
           </div>
           
