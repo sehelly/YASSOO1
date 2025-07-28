@@ -63,6 +63,14 @@ const AdminDashboard = ({ onLogout }) => {
     icon: ''
   });
 
+  // حالات التعديل
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [editingBranch, setEditingBranch] = useState(null);
+  const [editingSocial, setEditingSocial] = useState(null);
+
+  // إيموجي للاختيار
+  const emojis = ['🐟', '🐠', '🐡', '🦐', '🦀', '🐙', '🦑', '🐋', '🐳', '🐬'];
+
   const handleAddProduct = () => {
     if (newProduct.name && newProduct.price) {
       const product = {
@@ -75,6 +83,46 @@ const AdminDashboard = ({ onLogout }) => {
       setNewProduct({ name: '', price: '', category: 'أسماك مملحة', stock: '', image: '🐟' });
       setShowAddProduct(false);
     }
+  };
+
+  const handleEditProduct = (product) => {
+    setEditingProduct(product);
+    setNewProduct({
+      name: product.name,
+      price: product.price.toString(),
+      category: product.category,
+      stock: product.stock.toString(),
+      image: product.image
+    });
+    setShowAddProduct(true);
+  };
+
+  const handleUpdateProduct = () => {
+    if (editingProduct && newProduct.name && newProduct.price) {
+      const updatedProduct = {
+        ...editingProduct,
+        name: newProduct.name,
+        price: parseFloat(newProduct.price),
+        category: newProduct.category,
+        stock: parseInt(newProduct.stock),
+        image: newProduct.image
+      };
+      
+      setProducts(products.map(p => p.id === editingProduct.id ? updatedProduct : p));
+      setEditingProduct(null);
+      setNewProduct({ name: '', price: '', category: 'أسماك مملحة', stock: '', image: '🐟' });
+      setShowAddProduct(false);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingProduct(null);
+    setNewProduct({ name: '', price: '', category: 'أسماك مملحة', stock: '', image: '🐟' });
+    setShowAddProduct(false);
+  };
+
+  const handleSelectEmoji = (emoji) => {
+    setNewProduct({ ...newProduct, image: emoji });
   };
 
   const handleAddBranch = () => {
@@ -139,7 +187,10 @@ const AdminDashboard = ({ onLogout }) => {
                 <p className="text-sm text-gray-600">{product.category}</p>
               </div>
               <div className="flex gap-1">
-                <button className="p-1 text-blue-600 hover:bg-blue-50 rounded">
+                <button 
+                  onClick={() => handleEditProduct(product)}
+                  className="p-1 text-blue-600 hover:bg-blue-50 rounded"
+                >
                   <Edit3 className="w-4 h-4" />
                 </button>
                 <button 
@@ -164,11 +215,13 @@ const AdminDashboard = ({ onLogout }) => {
         ))}
       </div>
 
-      {/* Add Product Modal */}
+      {/* Add/Edit Product Modal */}
       {showAddProduct && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <h3 className="text-lg font-bold mb-4">إضافة منتج جديد</h3>
+            <h3 className="text-lg font-bold mb-4">
+              {editingProduct ? 'تعديل المنتج' : 'إضافة منتج جديد'}
+            </h3>
             <div className="space-y-4">
               <input
                 type="text"
@@ -192,30 +245,35 @@ const AdminDashboard = ({ onLogout }) => {
                 className="w-full p-3 border rounded-lg"
               />
               <div className="space-y-2">
-                <input
-                  type="text"
-                  placeholder="رابط الصورة"
-                  value={newProduct.image}
-                  onChange={(e) => setNewProduct({...newProduct, image: e.target.value})}
-                  className="w-full p-3 border rounded-lg"
-                />
-                <button
-                  type="button"
-                  className="w-full bg-blue-100 text-blue-700 py-2 rounded-lg hover:bg-blue-200 transition-colors"
-                >
-                  اختيار إيموجي
-                </button>
+                <label className="block text-sm font-medium text-gray-700">الصورة الحالية:</label>
+                <div className="text-4xl text-center p-4 bg-gray-50 rounded-lg">
+                  {newProduct.image}
+                </div>
+                <label className="block text-sm font-medium text-gray-700">اختر إيموجي جديد:</label>
+                <div className="grid grid-cols-5 gap-2">
+                  {emojis.map((emoji, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleSelectEmoji(emoji)}
+                      className={`p-2 text-2xl rounded-lg hover:bg-blue-50 ${
+                        newProduct.image === emoji ? 'bg-blue-100 border-2 border-blue-300' : ''
+                      }`}
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
             <div className="flex gap-2 mt-6">
               <button
-                onClick={handleAddProduct}
+                onClick={editingProduct ? handleUpdateProduct : handleAddProduct}
                 className="flex-1 bg-blue-600 text-white py-2 rounded-lg"
               >
-                إضافة
+                {editingProduct ? 'تحديث' : 'إضافة'}
               </button>
               <button
-                onClick={() => setShowAddProduct(false)}
+                onClick={editingProduct ? handleCancelEdit : () => setShowAddProduct(false)}
                 className="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg"
               >
                 إلغاء
