@@ -411,7 +411,9 @@ const YasoFishApp = () => {
                       setCurrentPage('product-details');
                     }}
                   >
-                    <img src={productImages[product.name] || '/fish-icon.svg'} alt={product.name} className="w-20 h-20 mx-auto mb-2 rounded-xl object-cover border" />
+                    <div className="w-20 h-20 mx-auto mb-2 rounded-xl bg-blue-100 flex items-center justify-center text-4xl border">
+                      {product.image}
+                    </div>
                     
                     {/* عدم التوفر */}
                     {!product.inStock && (
