@@ -8,17 +8,10 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || SUPABASE_ANON_KEY
 
-console.log('🔧 تهيئة Supabase...')
-console.log('URL:', supabaseUrl ? '✅ موجود' : '❌ مفقود')
-console.log('Key:', supabaseAnonKey ? '✅ موجود' : '❌ مفقود')
-
 // التحقق من صحة القيم
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('❌ خطأ: قيم Supabase غير صحيحة')
   throw new Error('Supabase configuration is invalid')
 }
 
 // إنشاء Supabase client
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
-console.log('✅ تم إنشاء Supabase client بنجاح') 
+export const supabase = createClient(supabaseUrl, supabaseAnonKey) 
