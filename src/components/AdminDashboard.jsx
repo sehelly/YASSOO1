@@ -17,22 +17,18 @@ import {
   BarChart3,
   FileText
 } from 'lucide-react';
-import ImageUpload from './ImageUpload';
-import { supabaseAdmin } from '../lib/supabase-admin';
 
 const AdminDashboard = ({ onLogout }) => {
-  const [activeTab, setActiveTab] = useState('products');
+  const [activeTab, setActiveTab] = useState('stats');
   const [showAddProduct, setShowAddProduct] = useState(false);
   const [showAddBranch, setShowAddBranch] = useState(false);
   const [showAddSocial, setShowAddSocial] = useState(false);
-  const [showImageUpload, setShowImageUpload] = useState(false);
-  const [uploadType, setUploadType] = useState('');
 
   // بيانات تجريبية
   const [products, setProducts] = useState([
-    { id: 1, name: 'فسيخ', price: 120, image: '/فسيخ.jpg', category: 'أسماك مملحة', stock: 50 },
-    { id: 2, name: 'بطارخ رنجة', price: 80, image: '/بطارخ رنجه.jpg', category: 'أسماك مملحة', stock: 30 },
-    { id: 3, name: 'ملوحة', price: 60, image: '/maloha.jpg', category: 'أسماك مملحة', stock: 40 },
+    { id: 1, name: 'فسيخ', price: 120, image: '🐟', category: 'أسماك مملحة', stock: 50 },
+    { id: 2, name: 'بطارخ رنجة', price: 80, image: '🐠', category: 'أسماك مملحة', stock: 30 },
+    { id: 3, name: 'ملوحة', price: 60, image: '🦐', category: 'أسماك مملحة', stock: 40 },
   ]);
 
   const [branches, setBranches] = useState([
@@ -51,7 +47,7 @@ const AdminDashboard = ({ onLogout }) => {
     price: '',
     category: 'أسماك مملحة',
     stock: '',
-    image: ''
+    image: '🐟'
   });
 
   const [newBranch, setNewBranch] = useState({
@@ -76,7 +72,7 @@ const AdminDashboard = ({ onLogout }) => {
         stock: parseInt(newProduct.stock)
       };
       setProducts([...products, product]);
-      setNewProduct({ name: '', price: '', category: 'أسماك مملحة', stock: '', image: '' });
+      setNewProduct({ name: '', price: '', category: 'أسماك مملحة', stock: '', image: '🐟' });
       setShowAddProduct(false);
     }
   };
@@ -103,18 +99,6 @@ const AdminDashboard = ({ onLogout }) => {
       setNewSocial({ platform: '', link: '', icon: '' });
       setShowAddSocial(false);
     }
-  };
-
-  const handleImageUpload = (imageUrl) => {
-    if (uploadType === 'product') {
-      setNewProduct({ ...newProduct, image: imageUrl });
-    }
-    setShowImageUpload(false);
-  };
-
-  const openImageUpload = (type) => {
-    setUploadType(type);
-    setShowImageUpload(true);
   };
 
   const deleteProduct = (id) => {
@@ -217,10 +201,9 @@ const AdminDashboard = ({ onLogout }) => {
                 />
                 <button
                   type="button"
-                  onClick={() => openImageUpload('product')}
                   className="w-full bg-blue-100 text-blue-700 py-2 rounded-lg hover:bg-blue-200 transition-colors"
                 >
-                  رفع صورة جديدة
+                  اختيار إيموجي
                 </button>
               </div>
             </div>
@@ -640,15 +623,6 @@ const AdminDashboard = ({ onLogout }) => {
           {activeTab === 'settings' && renderSettings()}
         </div>
       </div>
-
-      {/* Image Upload Modal */}
-      {showImageUpload && (
-        <ImageUpload
-          onUpload={handleImageUpload}
-          onCancel={() => setShowImageUpload(false)}
-          folder={uploadType}
-        />
-      )}
     </div>
   );
 };
