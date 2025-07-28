@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-// متجر إدارة البيانات المركزي
+// متجر إدارة البيانات المركزي - تحكم كامل
 export const useAdminStore = create((set, get) => ({
   // بيانات المنتجات
   products: [
@@ -94,15 +94,91 @@ export const useAdminStore = create((set, get) => ({
     { id: 4, platform: 'Instagram', link: 'https://instagram.com/yaso.fish', icon: '📷' }
   ],
 
-  // إعدادات الموقع
+  // إعدادات الموقع الشاملة
   siteSettings: {
+    // معلومات أساسية
     storeName: 'فسخاني ياسو',
     storeDescription: 'أجود الأسماك المملحة في مصر',
     mainPhone: '01012345678',
     mainEmail: 'info@yaso-fish.com',
+    
+    // الشعار والصور
     logo: '🐟',
     coverImage: '🌊',
-    theme: 'blue'
+    favicon: '🐟',
+    
+    // الألوان والتصميم
+    theme: {
+      primaryColor: '#2563eb', // الأزرق
+      secondaryColor: '#1e40af',
+      accentColor: '#f59e0b',
+      backgroundColor: '#eff6ff',
+      textColor: '#1f2937',
+      headerBg: '#ffffff',
+      footerBg: '#1f2937'
+    },
+    
+    // الهيدر
+    header: {
+      showLogo: true,
+      showSearch: true,
+      showNotifications: true,
+      showCart: true,
+      showAdminButton: true,
+      height: '80px',
+      shadow: true
+    },
+    
+    // الفوتر
+    footer: {
+      showSocialLinks: true,
+      showContactInfo: true,
+      showNewsletter: true,
+      backgroundColor: '#1f2937',
+      textColor: '#ffffff'
+    },
+    
+    // الصفحة الرئيسية
+    homepage: {
+      showHero: true,
+      heroTitle: 'أجود الأسماك المملحة',
+      heroSubtitle: 'طازجة ومملحة بعناية فائقة',
+      heroImage: '🌊',
+      showCategories: true,
+      showFeaturedProducts: true,
+      showOffers: true,
+      offerTitle: '🔥 عرض اليوم',
+      offerDescription: 'خصم يصل إلى 20% على منتجات مختارة',
+      offerCode: 'YASO20'
+    },
+    
+    // السلة والطلبات
+    cart: {
+      showQuantityControls: true,
+      showRemoveButton: true,
+      showTotal: true,
+      allowGuestCheckout: true
+    },
+    
+    // الإشعارات
+    notifications: [
+      {
+        id: 1,
+        title: 'تم تأكيد طلبك',
+        message: 'طلبك رقم ORD002 تم تأكيده وجاري التحضير',
+        time: '10 دقائق',
+        read: false,
+        type: 'order'
+      },
+      {
+        id: 2,
+        title: 'عرض خاص',
+        message: 'خصم 20% على جميع منتجات الرنجة لفترة محدودة',
+        time: 'ساعة',
+        read: false,
+        type: 'offer'
+      }
+    ]
   },
 
   // إجراءات المنتجات
@@ -189,10 +265,81 @@ export const useAdminStore = create((set, get) => ({
     }))
   },
 
-  // إجراءات إعدادات الموقع
+  // إجراءات إعدادات الموقع الشاملة
   updateSiteSettings: (settings) => {
     set((state) => ({
       siteSettings: { ...state.siteSettings, ...settings }
+    }))
+  },
+
+  updateTheme: (themeUpdates) => {
+    set((state) => ({
+      siteSettings: {
+        ...state.siteSettings,
+        theme: { ...state.siteSettings.theme, ...themeUpdates }
+      }
+    }))
+  },
+
+  updateHeader: (headerUpdates) => {
+    set((state) => ({
+      siteSettings: {
+        ...state.siteSettings,
+        header: { ...state.siteSettings.header, ...headerUpdates }
+      }
+    }))
+  },
+
+  updateFooter: (footerUpdates) => {
+    set((state) => ({
+      siteSettings: {
+        ...state.siteSettings,
+        footer: { ...state.siteSettings.footer, ...footerUpdates }
+      }
+    }))
+  },
+
+  updateHomepage: (homepageUpdates) => {
+    set((state) => ({
+      siteSettings: {
+        ...state.siteSettings,
+        homepage: { ...state.siteSettings.homepage, ...homepageUpdates }
+      }
+    }))
+  },
+
+  // إجراءات الإشعارات
+  addNotification: (notification) => {
+    const newNotification = {
+      ...notification,
+      id: Date.now(),
+      read: false
+    }
+    set((state) => ({
+      siteSettings: {
+        ...state.siteSettings,
+        notifications: [...state.siteSettings.notifications, newNotification]
+      }
+    }))
+  },
+
+  markNotificationAsRead: (id) => {
+    set((state) => ({
+      siteSettings: {
+        ...state.siteSettings,
+        notifications: state.siteSettings.notifications.map(notification =>
+          notification.id === id ? { ...notification, read: true } : notification
+        )
+      }
+    }))
+  },
+
+  deleteNotification: (id) => {
+    set((state) => ({
+      siteSettings: {
+        ...state.siteSettings,
+        notifications: state.siteSettings.notifications.filter(notification => notification.id !== id)
+      }
     }))
   }
 })) 

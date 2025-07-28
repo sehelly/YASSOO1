@@ -26,6 +26,29 @@ const YasoFishApp = () => {
   // استخدام المتجر المركزي
   const { products, branches, socialLinks, siteSettings } = useAdminStore();
 
+  // تطبيق الألوان الديناميكية
+  const dynamicStyles = {
+    '--primary-color': siteSettings.theme.primaryColor,
+    '--secondary-color': siteSettings.theme.secondaryColor,
+    '--accent-color': siteSettings.theme.accentColor,
+    '--background-color': siteSettings.theme.backgroundColor,
+    '--text-color': siteSettings.theme.textColor,
+    '--header-bg': siteSettings.theme.headerBg,
+    '--footer-bg': siteSettings.theme.footerBg
+  };
+
+  // تطبيق الألوان على العناصر
+  const headerStyle = {
+    backgroundColor: siteSettings.theme.headerBg,
+    boxShadow: siteSettings.header.shadow ? '0 2px 4px rgba(0,0,0,0.1)' : 'none',
+    height: siteSettings.header.height
+  };
+
+  const footerStyle = {
+    backgroundColor: siteSettings.footer.backgroundColor,
+    color: siteSettings.footer.textColor
+  };
+
   // دوال إدارة لوحة التحكم
   const handleAdminLogin = (adminData) => {
     setAdminUser(adminData);
@@ -116,9 +139,9 @@ const YasoFishApp = () => {
 
   // واجهة البداية المحدثة
   const HomePage = () => (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
+    <div className="min-h-screen" style={{ backgroundColor: siteSettings.theme.backgroundColor }}>
       {/* Header */}
-      <div className="bg-white shadow-lg">
+      <div className="bg-white shadow-lg" style={headerStyle}>
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center gap-3">
             {user && (
@@ -126,77 +149,110 @@ const YasoFishApp = () => {
                 <User className="w-6 h-6 text-blue-600" />
               </div>
             )}
-            <div>
-              <h1 className="text-2xl font-bold text-blue-800">{siteSettings.storeName}</h1>
-              <p className="text-xs text-gray-600">{siteSettings.storeDescription}</p>
+            <div className="flex items-center gap-3">
+              {siteSettings.header.showLogo && (
+                <div className="text-3xl">{siteSettings.logo}</div>
+              )}
+              <div>
+                <h1 className="text-2xl font-bold" style={{ color: siteSettings.theme.primaryColor }}>
+                  {siteSettings.storeName}
+                </h1>
+                <p className="text-xs text-gray-600">{siteSettings.storeDescription}</p>
+              </div>
             </div>
           </div>
           
           <div className="flex items-center gap-3">
-            <div className="relative">
-              <Bell 
-                className="w-7 h-7 text-gray-600 cursor-pointer" 
-                onClick={() => setCurrentPage('notifications')}
-              />
-              {notifications.filter(n => !n.read).length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                  {notifications.filter(n => !n.read).length}
-                </span>
-              )}
-            </div>
-            <div className="relative">
-              <ShoppingCart 
-                className="w-7 h-7 text-blue-600 cursor-pointer" 
-                onClick={() => setCurrentPage('cart')}
-              />
-              {cart.length > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  {cart.reduce((sum, item) => sum + item.quantity, 0)}
-                </span>
-              )}
-            </div>
-            <div className="relative">
-              <Shield 
-                className="w-7 h-7 text-green-600 cursor-pointer" 
-                onClick={handleShowAdminLogin}
-                title="لوحة التحكم"
-              />
-            </div>
+            {siteSettings.header.showNotifications && (
+              <div className="relative">
+                <Bell 
+                  className="w-7 h-7 text-gray-600 cursor-pointer" 
+                  onClick={() => setCurrentPage('notifications')}
+                />
+                {siteSettings.notifications.filter(n => !n.read).length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                    {siteSettings.notifications.filter(n => !n.read).length}
+                  </span>
+                )}
+              </div>
+            )}
+            {siteSettings.header.showCart && (
+              <div className="relative">
+                <ShoppingCart 
+                  className="w-7 h-7 cursor-pointer" 
+                  style={{ color: siteSettings.theme.primaryColor }}
+                  onClick={() => setCurrentPage('cart')}
+                />
+                {cart.length > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {cart.reduce((sum, item) => sum + item.quantity, 0)}
+                  </span>
+                )}
+              </div>
+            )}
+            {siteSettings.header.showAdminButton && (
+              <div className="relative">
+                <Shield 
+                  className="w-7 h-7 text-green-600 cursor-pointer" 
+                  onClick={handleShowAdminLogin}
+                  title="لوحة التحكم"
+                />
+              </div>
+            )}
           </div>
         </div>
 
         {/* شريط البحث */}
-        <div className="px-4 pb-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input
-              type="text"
-              placeholder="ابحث عن المنتجات..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+        {siteSettings.header.showSearch && (
+          <div className="px-4 pb-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="ابحث عن المنتجات..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                style={{ '--tw-ring-color': siteSettings.theme.primaryColor }}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* العروض الخاصة */}
-      <div className="p-4">
-        <div className="bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 rounded-xl p-4 text-white mb-4 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-20 h-20 bg-white opacity-10 rounded-full -mr-10 -mt-10"></div>
-          <div className="flex items-center justify-between relative z-10">
-            <div>
-              <h3 className="font-bold text-lg">🔥 عرض اليوم</h3>
-              <p className="text-sm opacity-90">خصم يصل إلى 20% على منتجات مختارة</p>
-              <p className="text-xs opacity-75 mt-1">كود الخصم: YASO20</p>
-            </div>
-            <div className="text-right">
-              <Clock className="w-6 h-6 mb-1 mx-auto" />
-              <p className="text-xs">متبقي 4 ساعات</p>
+      {siteSettings.homepage.showOffers && (
+        <div className="p-4">
+          <div className="bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 rounded-xl p-4 text-white mb-4 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-20 h-20 bg-white opacity-10 rounded-full -mr-10 -mt-10"></div>
+            <div className="flex items-center justify-between relative z-10">
+              <div>
+                <h3 className="font-bold text-lg">{siteSettings.homepage.offerTitle}</h3>
+                <p className="text-sm opacity-90">{siteSettings.homepage.offerDescription}</p>
+                <p className="text-xs opacity-75 mt-1">كود الخصم: {siteSettings.homepage.offerCode}</p>
+              </div>
+              <div className="text-right">
+                <Clock className="w-6 h-6 mb-1 mx-auto" />
+                <p className="text-xs">متبقي 4 ساعات</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* قسم Hero */}
+      {siteSettings.homepage.showHero && (
+        <div className="p-4">
+          <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl p-6 text-white text-center relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full -mr-16 -mt-16"></div>
+            <div className="relative z-10">
+              <div className="text-6xl mb-4">{siteSettings.homepage.heroImage}</div>
+              <h2 className="text-2xl font-bold mb-2">{siteSettings.homepage.heroTitle}</h2>
+              <p className="text-lg opacity-90">{siteSettings.homepage.heroSubtitle}</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* فئات المنتجات */}
       <div className="px-4 mb-4">

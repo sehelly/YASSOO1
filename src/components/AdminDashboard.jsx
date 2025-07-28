@@ -40,16 +40,34 @@ const AdminDashboard = ({ onLogout }) => {
     addSocialLink,
     updateSocialLink,
     deleteSocialLink,
-    updateSiteSettings
+    updateSiteSettings,
+    updateTheme,
+    updateHeader,
+    updateFooter,
+    updateHomepage,
+    addNotification,
+    markNotificationAsRead,
+    deleteNotification
   } = useAdminStore();
 
   // حالات التعديل
   const [editingProduct, setEditingProduct] = useState(null);
   const [editingBranch, setEditingBranch] = useState(null);
   const [editingSocial, setEditingSocial] = useState(null);
+  const [editingSettings, setEditingSettings] = useState(false);
 
   // إيموجي للاختيار
-  const emojis = ['🐟', '🐠', '🐡', '🦐', '🦀', '🐙', '🦑', '🐋', '🐳', '🐬'];
+  const emojis = ['🐟', '🐠', '🐡', '🦐', '🦀', '🐙', '🦑', '🐋', '🐳', '🐬', '🌊', '🌅', '🏖️', '⚓', '🎣'];
+
+  // ألوان للاختيار
+  const colorOptions = [
+    { name: 'أزرق', value: '#2563eb' },
+    { name: 'أحمر', value: '#dc2626' },
+    { name: 'أخضر', value: '#16a34a' },
+    { name: 'أصفر', value: '#f59e0b' },
+    { name: 'بنفسجي', value: '#9333ea' },
+    { name: 'برتقالي', value: '#ea580c' }
+  ];
 
   const [newProduct, setNewProduct] = useState({
     name: '',
@@ -511,70 +529,298 @@ const AdminDashboard = ({ onLogout }) => {
 
   const renderSettings = () => (
     <div className="space-y-6">
-      <h2 className="text-xl font-bold text-gray-800">إعدادات المتجر</h2>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Store Info */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <Settings className="w-5 h-5 text-blue-600" />
-            معلومات المتجر
-          </h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">اسم المتجر</label>
-              <input
-                type="text"
-                defaultValue={siteSettings.name}
-                onChange={(e) => updateSiteSettings({ name: e.target.value })}
-                className="w-full p-3 border rounded-lg"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">وصف المتجر</label>
-              <textarea
-                defaultValue={siteSettings.description}
-                onChange={(e) => updateSiteSettings({ description: e.target.value })}
-                className="w-full p-3 border rounded-lg"
-                rows="3"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">رقم الهاتف الرئيسي</label>
-              <input
-                type="text"
-                defaultValue={siteSettings.phone}
-                onChange={(e) => updateSiteSettings({ phone: e.target.value })}
-                className="w-full p-3 border rounded-lg"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Logo & Images */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <ImageIcon className="w-5 h-5 text-blue-600" />
-            اللوجو والصور
-          </h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">لوجو المتجر</label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
-                <ImageIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                <p className="text-sm text-gray-600">اضغط لرفع اللوجو</p>
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">صورة الغلاف</label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
-                <ImageIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                <p className="text-sm text-gray-600">اضغط لرفع صورة الغلاف</p>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-bold text-gray-800">إعدادات الموقع الشاملة</h2>
+        <button
+          onClick={() => setEditingSettings(!editingSettings)}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+        >
+          {editingSettings ? 'إلغاء التعديل' : 'تعديل الإعدادات'}
+        </button>
       </div>
+
+      {editingSettings ? (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* المعلومات الأساسية */}
+          <div className="bg-white rounded-lg shadow-sm border p-6">
+            <h3 className="text-lg font-semibold mb-4">المعلومات الأساسية</h3>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">اسم المتجر</label>
+                <input
+                  type="text"
+                  value={siteSettings.storeName}
+                  onChange={(e) => updateSiteSettings({ storeName: e.target.value })}
+                  className="w-full p-3 border rounded-lg"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">وصف المتجر</label>
+                <textarea
+                  value={siteSettings.storeDescription}
+                  onChange={(e) => updateSiteSettings({ storeDescription: e.target.value })}
+                  className="w-full p-3 border rounded-lg"
+                  rows="3"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">رقم الهاتف الرئيسي</label>
+                <input
+                  type="text"
+                  value={siteSettings.mainPhone}
+                  onChange={(e) => updateSiteSettings({ mainPhone: e.target.value })}
+                  className="w-full p-3 border rounded-lg"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">البريد الإلكتروني</label>
+                <input
+                  type="email"
+                  value={siteSettings.mainEmail}
+                  onChange={(e) => updateSiteSettings({ mainEmail: e.target.value })}
+                  className="w-full p-3 border rounded-lg"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* الشعار والصور */}
+          <div className="bg-white rounded-lg shadow-sm border p-6">
+            <h3 className="text-lg font-semibold mb-4">الشعار والصور</h3>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">شعار المتجر</label>
+                <div className="text-4xl text-center p-4 bg-gray-50 rounded-lg mb-2">
+                  {siteSettings.logo}
+                </div>
+                <div className="grid grid-cols-5 gap-2">
+                  {emojis.slice(0, 10).map((emoji, index) => (
+                    <button
+                      key={index}
+                      onClick={() => updateSiteSettings({ logo: emoji })}
+                      className={`p-2 text-2xl rounded-lg hover:bg-blue-50 ${
+                        siteSettings.logo === emoji ? 'bg-blue-100 border-2 border-blue-300' : ''
+                      }`}
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">صورة الغلاف</label>
+                <div className="text-4xl text-center p-4 bg-gray-50 rounded-lg mb-2">
+                  {siteSettings.coverImage}
+                </div>
+                <div className="grid grid-cols-5 gap-2">
+                  {emojis.slice(10).map((emoji, index) => (
+                    <button
+                      key={index}
+                      onClick={() => updateSiteSettings({ coverImage: emoji })}
+                      className={`p-2 text-2xl rounded-lg hover:bg-blue-50 ${
+                        siteSettings.coverImage === emoji ? 'bg-blue-100 border-2 border-blue-300' : ''
+                      }`}
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* الألوان والتصميم */}
+          <div className="bg-white rounded-lg shadow-sm border p-6">
+            <h3 className="text-lg font-semibold mb-4">الألوان والتصميم</h3>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">اللون الأساسي</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {colorOptions.map((color, index) => (
+                    <button
+                      key={index}
+                      onClick={() => updateTheme({ primaryColor: color.value })}
+                      className={`p-3 rounded-lg border-2 ${
+                        siteSettings.theme.primaryColor === color.value ? 'border-blue-500' : 'border-gray-200'
+                      }`}
+                      style={{ backgroundColor: color.value }}
+                    >
+                      <span className="text-white font-medium">{color.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">لون الخلفية</label>
+                <input
+                  type="color"
+                  value={siteSettings.theme.backgroundColor}
+                  onChange={(e) => updateTheme({ backgroundColor: e.target.value })}
+                  className="w-full h-12 rounded-lg"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* إعدادات الهيدر */}
+          <div className="bg-white rounded-lg shadow-sm border p-6">
+            <h3 className="text-lg font-semibold mb-4">إعدادات الهيدر</h3>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-700">إظهار الشعار</span>
+                <input
+                  type="checkbox"
+                  checked={siteSettings.header.showLogo}
+                  onChange={(e) => updateHeader({ showLogo: e.target.checked })}
+                  className="w-4 h-4 text-blue-600"
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-700">إظهار البحث</span>
+                <input
+                  type="checkbox"
+                  checked={siteSettings.header.showSearch}
+                  onChange={(e) => updateHeader({ showSearch: e.target.checked })}
+                  className="w-4 h-4 text-blue-600"
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-700">إظهار الإشعارات</span>
+                <input
+                  type="checkbox"
+                  checked={siteSettings.header.showNotifications}
+                  onChange={(e) => updateHeader({ showNotifications: e.target.checked })}
+                  className="w-4 h-4 text-blue-600"
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-700">إظهار السلة</span>
+                <input
+                  type="checkbox"
+                  checked={siteSettings.header.showCart}
+                  onChange={(e) => updateHeader({ showCart: e.target.checked })}
+                  className="w-4 h-4 text-blue-600"
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-700">إظهار زر لوحة التحكم</span>
+                <input
+                  type="checkbox"
+                  checked={siteSettings.header.showAdminButton}
+                  onChange={(e) => updateHeader({ showAdminButton: e.target.checked })}
+                  className="w-4 h-4 text-blue-600"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* إعدادات الصفحة الرئيسية */}
+          <div className="bg-white rounded-lg shadow-sm border p-6">
+            <h3 className="text-lg font-semibold mb-4">إعدادات الصفحة الرئيسية</h3>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-700">إظهار القسم الرئيسي</span>
+                <input
+                  type="checkbox"
+                  checked={siteSettings.homepage.showHero}
+                  onChange={(e) => updateHomepage({ showHero: e.target.checked })}
+                  className="w-4 h-4 text-blue-600"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">عنوان القسم الرئيسي</label>
+                <input
+                  type="text"
+                  value={siteSettings.homepage.heroTitle}
+                  onChange={(e) => updateHomepage({ heroTitle: e.target.value })}
+                  className="w-full p-3 border rounded-lg"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">وصف القسم الرئيسي</label>
+                <input
+                  type="text"
+                  value={siteSettings.homepage.heroSubtitle}
+                  onChange={(e) => updateHomepage({ heroSubtitle: e.target.value })}
+                  className="w-full p-3 border rounded-lg"
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-700">إظهار العروض</span>
+                <input
+                  type="checkbox"
+                  checked={siteSettings.homepage.showOffers}
+                  onChange={(e) => updateHomepage({ showOffers: e.target.checked })}
+                  className="w-4 h-4 text-blue-600"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">عنوان العرض</label>
+                <input
+                  type="text"
+                  value={siteSettings.homepage.offerTitle}
+                  onChange={(e) => updateHomepage({ offerTitle: e.target.value })}
+                  className="w-full p-3 border rounded-lg"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* إدارة الإشعارات */}
+          <div className="bg-white rounded-lg shadow-sm border p-6">
+            <h3 className="text-lg font-semibold mb-4">إدارة الإشعارات</h3>
+            <div className="space-y-4">
+              <button
+                onClick={() => addNotification({
+                  title: 'إشعار جديد',
+                  message: 'هذا إشعار تجريبي',
+                  type: 'info'
+                })}
+                className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"
+              >
+                إضافة إشعار جديد
+              </button>
+              <div className="space-y-2">
+                {siteSettings.notifications.map(notification => (
+                  <div key={notification.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div>
+                      <h4 className="font-medium">{notification.title}</h4>
+                      <p className="text-sm text-gray-600">{notification.message}</p>
+                    </div>
+                    <button
+                      onClick={() => deleteNotification(notification.id)}
+                      className="text-red-600 hover:text-red-800"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="bg-white rounded-lg shadow-sm border p-6">
+            <h3 className="font-semibold text-gray-800 mb-2">اسم المتجر</h3>
+            <p className="text-gray-600">{siteSettings.storeName}</p>
+          </div>
+          <div className="bg-white rounded-lg shadow-sm border p-6">
+            <h3 className="font-semibold text-gray-800 mb-2">اللون الأساسي</h3>
+            <div className="flex items-center gap-2">
+              <div 
+                className="w-6 h-6 rounded-full border"
+                style={{ backgroundColor: siteSettings.theme.primaryColor }}
+              ></div>
+              <span className="text-gray-600">{siteSettings.theme.primaryColor}</span>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg shadow-sm border p-6">
+            <h3 className="font-semibold text-gray-800 mb-2">الشعار</h3>
+            <div className="text-3xl">{siteSettings.logo}</div>
+          </div>
+        </div>
+      )}
     </div>
   );
 
