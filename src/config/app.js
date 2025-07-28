@@ -10,7 +10,7 @@ export const config = {
   // إعدادات Supabase
   supabase: {
     url: import.meta.env.VITE_SUPABASE_URL || 'https://brvpxmzoapcjrxmysljp.supabase.co',
-    anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_GR0iGQkSaD0yIkS5jop4eQ_uzFybXKQ',
+    anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJydnB4bXpvYXBjanJ4bXlzbGpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI2NzI5NzAsImV4cCI6MjA0ODI0ODk3MH0.GR0iGQkSaD0yIkS5jop4eQ_uzFybXKQ',
     storageBucket: import.meta.env.VITE_STORAGE_BUCKET || 'images',
   },
 
