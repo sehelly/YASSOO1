@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { Phone, MapPin, Clock, Star, Truck, MessageCircle, ExternalLink } from 'lucide-react';
+import { Phone, MapPin, Clock, Star, Truck, MessageCircle, ExternalLink, ArrowLeft } from 'lucide-react';
 import { useAdminStore } from '../store/adminStore';
 
 const ContactPage = () => {
   const [activeTab, setActiveTab] = useState('branches');
   const { branches, socialLinks } = useAdminStore();
+
+  const handleBack = () => {
+    window.history.back();
+  };
 
   const tabs = [
     { id: 'branches', label: 'الفروع', icon: MapPin },
@@ -17,8 +21,20 @@ const ContactPage = () => {
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 py-4">
-          <h1 className="text-2xl font-bold text-gray-800 text-center">اتصل بنا</h1>
-          <p className="text-gray-600 text-center mt-1">نحن هنا لمساعدتك في أي وقت</p>
+          <div className="flex items-center justify-between">
+            <button
+              onClick={handleBack}
+              className="flex items-center gap-2 text-gray-600 hover:text-blue-600"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>العودة</span>
+            </button>
+            <div className="text-center">
+              <h1 className="text-2xl font-bold text-gray-800">اتصل بنا</h1>
+              <p className="text-gray-600 text-sm">نحن هنا لمساعدتك في أي وقت</p>
+            </div>
+            <div className="w-20"></div>
+          </div>
         </div>
       </div>
 

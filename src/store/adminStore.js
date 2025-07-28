@@ -160,25 +160,41 @@ export const useAdminStore = create((set, get) => ({
       allowGuestCheckout: true
     },
     
-    // الإشعارات
-    notifications: [
-      {
-        id: 1,
-        title: 'تم تأكيد طلبك',
-        message: 'طلبك رقم ORD002 تم تأكيده وجاري التحضير',
-        time: '10 دقائق',
-        read: false,
-        type: 'order'
-      },
-      {
-        id: 2,
-        title: 'عرض خاص',
-        message: 'خصم 20% على جميع منتجات الرنجة لفترة محدودة',
-        time: 'ساعة',
-        read: false,
-        type: 'offer'
-      }
-    ]
+            // الإشعارات
+        notifications: [
+          {
+            id: 1,
+            title: 'تم تأكيد طلبك',
+            message: 'طلبك رقم ORD002 تم تأكيده وجاري التحضير',
+            time: '10 دقائق',
+            read: false,
+            type: 'order'
+          },
+          {
+            id: 2,
+            title: 'عرض خاص جديد',
+            message: 'خصم 25% على جميع منتجات الرنجة هذا الأسبوع',
+            time: 'ساعة',
+            read: false,
+            type: 'offer'
+          },
+          {
+            id: 3,
+            title: 'منتج جديد',
+            message: 'تم إضافة فسيخ بلدي درجة أولى جديد',
+            time: '3 ساعات',
+            read: false,
+            type: 'product'
+          },
+          {
+            id: 4,
+            title: 'توصيل مجاني',
+            message: 'توصيل مجاني للطلبات أكثر من 200 جنيه',
+            time: 'يوم',
+            read: false,
+            type: 'delivery'
+          }
+        ]
   },
 
   // إجراءات المنتجات

@@ -770,26 +770,87 @@ const AdminDashboard = ({ onLogout }) => {
           <div className="bg-white rounded-lg shadow-sm border p-6">
             <h3 className="text-lg font-semibold mb-4">إدارة الإشعارات</h3>
             <div className="space-y-4">
-              <button
-                onClick={() => addNotification({
-                  title: 'إشعار جديد',
-                  message: 'هذا إشعار تجريبي',
-                  type: 'info'
-                })}
-                className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"
-              >
-                إضافة إشعار جديد
-              </button>
+              <div className="bg-blue-50 p-4 rounded-lg mb-4">
+                <h4 className="font-semibold text-blue-800 mb-2">💡 وظيفة الإشعارات:</h4>
+                <ul className="text-sm text-blue-700 space-y-1">
+                  <li>• إشعارات للعملاء عن تأكيد الطلبات</li>
+                  <li>• عروض خاصة وخصومات جديدة</li>
+                  <li>• إشعارات عن المنتجات الجديدة</li>
+                  <li>• تنبيهات عن حالة التوصيل</li>
+                  <li>• رسائل ترحيبية للعملاء الجدد</li>
+                </ul>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button
+                  onClick={() => addNotification({
+                    title: 'عرض خاص جديد',
+                    message: 'خصم 25% على جميع منتجات الرنجة هذا الأسبوع',
+                    type: 'offer'
+                  })}
+                  className="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700"
+                >
+                  إضافة عرض خاص
+                </button>
+                
+                <button
+                  onClick={() => addNotification({
+                    title: 'منتج جديد',
+                    message: 'تم إضافة فسيخ بلدي درجة أولى جديد',
+                    type: 'product'
+                  })}
+                  className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
+                >
+                  إضافة منتج جديد
+                </button>
+                
+                <button
+                  onClick={() => addNotification({
+                    title: 'تأكيد طلب',
+                    message: 'طلبك رقم ORD003 تم تأكيده وجاري التحضير',
+                    type: 'order'
+                  })}
+                  className="bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700"
+                >
+                  إضافة تأكيد طلب
+                </button>
+                
+                <button
+                  onClick={() => addNotification({
+                    title: 'توصيل مجاني',
+                    message: 'توصيل مجاني للطلبات أكثر من 200 جنيه',
+                    type: 'delivery'
+                  })}
+                  className="bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700"
+                >
+                  إضافة عرض توصيل
+                </button>
+              </div>
+              
               <div className="space-y-2">
+                <h4 className="font-medium text-gray-800">الإشعارات الحالية:</h4>
                 {siteSettings.notifications.map(notification => (
                   <div key={notification.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div>
-                      <h4 className="font-medium">{notification.title}</h4>
+                    <div className="flex-1">
+                      <h4 className="font-medium text-gray-800">{notification.title}</h4>
                       <p className="text-sm text-gray-600">{notification.message}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className={`text-xs px-2 py-1 rounded-full ${
+                          notification.type === 'offer' ? 'bg-green-100 text-green-800' :
+                          notification.type === 'product' ? 'bg-blue-100 text-blue-800' :
+                          notification.type === 'order' ? 'bg-purple-100 text-purple-800' :
+                          'bg-orange-100 text-orange-800'
+                        }`}>
+                          {notification.type === 'offer' ? 'عرض' :
+                           notification.type === 'product' ? 'منتج' :
+                           notification.type === 'order' ? 'طلب' : 'توصيل'}
+                        </span>
+                        <span className="text-xs text-gray-500">{notification.time}</span>
+                      </div>
                     </div>
                     <button
                       onClick={() => deleteNotification(notification.id)}
-                      className="text-red-600 hover:text-red-800"
+                      className="text-red-600 hover:text-red-800 p-1"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>

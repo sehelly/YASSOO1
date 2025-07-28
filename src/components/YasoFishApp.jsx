@@ -493,11 +493,7 @@ const YasoFishApp = () => {
           />
         );
       case 'contact':
-        return (
-          <ContactPage
-            setCurrentPage={setCurrentPage}
-          />
-        );
+        return <ContactPage />;
       case 'product-details':
         return <ProductDetailsPage />;
       default:
