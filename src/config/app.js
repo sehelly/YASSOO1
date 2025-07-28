@@ -9,8 +9,8 @@ export const config = {
 
   // إعدادات Supabase
   supabase: {
-    url: import.meta.env.VITE_SUPABASE_URL,
-    anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+    url: import.meta.env.VITE_SUPABASE_URL || 'https://brvpxmzoapcjrxmysljp.supabase.co',
+    anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_GR0iGQkSaD0yIkS5jop4eQ_uzFybXKQ',
     storageBucket: import.meta.env.VITE_STORAGE_BUCKET || 'images',
   },
 
