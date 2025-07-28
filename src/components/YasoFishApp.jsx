@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingCart, MapPin, Phone, User, Home, Plus, Minus, Star, Clock, Truck, Search, Heart, Filter, Edit3, Bell, Settings, CreditCard, Package, CheckCircle, XCircle, AlertCircle, Eye, MessageCircle, LogOut, Camera, Shield } from 'lucide-react';
+import { ShoppingCart, MapPin, Phone, User, Home, Plus, Minus, Star, Clock, Truck, Search, Heart, Filter, Bell, Settings, CreditCard, Package, CheckCircle, XCircle, AlertCircle, MessageCircle, LogOut, Shield } from 'lucide-react';
 import CartPage from './CartPage';
 import OrdersPage from './OrdersPage';
 import ProfilePage from './ProfilePage';
 import CheckoutPage from './CheckoutPage';
 import NotificationsPage from './NotificationsPage';
-import AdminLogin from './AdminLogin';
 import ContactPage from './ContactPage';
 
 const YasoFishApp = () => {
@@ -238,7 +237,8 @@ const YasoFishApp = () => {
     return filtered;
   };
 
-  // دوال إدارة لوحة التحكم
+  // دوال إدارة لوحة التحكم - معطلة مؤقتًا
+  /*
   const handleAdminLogin = (adminData) => {
     setAdminUser(adminData);
     setShowAdminLogin(false);
@@ -268,6 +268,7 @@ const YasoFishApp = () => {
       });
     }
   }, [adminUser, AdminDashboardComponent]);
+  */
 
   // واجهة البداية المحدثة
   const HomePage = () => (
@@ -310,6 +311,7 @@ const YasoFishApp = () => {
                 </span>
               )}
             </div>
+            {/* زر لوحة التحكم - معطل مؤقتًا
             <div className="relative">
               <Shield 
                 className="w-7 h-7 text-green-600 cursor-pointer" 
@@ -317,6 +319,7 @@ const YasoFishApp = () => {
                 title="لوحة التحكم"
               />
             </div>
+            */}
           </div>
         </div>
 
@@ -521,7 +524,8 @@ const YasoFishApp = () => {
 
   // عرض الصفحة المناسبة
   const renderCurrentPage = () => {
-    // عرض لوحة التحكم إذا كان المدير مسجل دخول
+    // عرض لوحة التحكم إذا كان المدير مسجل دخول - معطل مؤقتًا
+    /*
     if (adminUser) {
       if (!AdminDashboardComponent) {
         return (
@@ -535,11 +539,14 @@ const YasoFishApp = () => {
       }
       return <AdminDashboardComponent onLogout={handleAdminLogout} />;
     }
+    */
 
-    // عرض صفحة تسجيل دخول المدير
+    // عرض صفحة تسجيل دخول المدير - معطل مؤقتًا
+    /*
     if (showAdminLogin) {
       return <AdminLogin onLogin={handleAdminLogin} onBack={handleBackToSite} />;
     }
+    */
 
     switch (currentPage) {
       case 'home':
