@@ -6,7 +6,6 @@ import ProfilePage from './ProfilePage';
 import CheckoutPage from './CheckoutPage';
 import NotificationsPage from './NotificationsPage';
 import AdminLogin from './AdminLogin';
-import AdminDashboard from './AdminDashboard';
 import ContactPage from './ContactPage';
 
 const YasoFishApp = () => {
@@ -21,6 +20,7 @@ const YasoFishApp = () => {
   const [adminUser, setAdminUser] = useState(null);
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('الكل');
+  const [AdminDashboardComponent, setAdminDashboardComponent] = useState(null);
 
   // بيانات المنتجات المحدثة
   const products = [
@@ -257,6 +257,17 @@ const YasoFishApp = () => {
     setShowAdminLogin(false);
     setCurrentPage('home');
   };
+
+  // تحميل AdminDashboard فقط عند الحاجة
+  useEffect(() => {
+    if (adminUser && !AdminDashboardComponent) {
+      import('./AdminDashboard').then(module => {
+        setAdminDashboardComponent(() => module.default);
+      }).catch(error => {
+        console.error('خطأ في تحميل لوحة التحكم:', error);
+      });
+    }
+  }, [adminUser, AdminDashboardComponent]);
 
   // واجهة البداية المحدثة
   const HomePage = () => (
@@ -512,7 +523,17 @@ const YasoFishApp = () => {
   const renderCurrentPage = () => {
     // عرض لوحة التحكم إذا كان المدير مسجل دخول
     if (adminUser) {
-      return <AdminDashboard onLogout={handleAdminLogout} />;
+      if (!AdminDashboardComponent) {
+        return (
+          <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <p className="text-gray-600">جاري تحميل لوحة التحكم...</p>
+            </div>
+          </div>
+        );
+      }
+      return <AdminDashboardComponent onLogout={handleAdminLogout} />;
     }
 
     // عرض صفحة تسجيل دخول المدير
