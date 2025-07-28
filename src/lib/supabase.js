@@ -1,18 +1,18 @@
 import { createClient } from '@supabase/supabase-js'
 
-// الحصول على المتغيرات البيئية مع قيم افتراضية
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://brvpxmzoapcjrxmysljp.supabase.co'
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_GR0iGQkSaD0yIkS5jop4eQ_uzFybXKQ'
+// القيم الحقيقية لـ Supabase
+const SUPABASE_URL = 'https://brvpxmzoapcjrxmysljp.supabase.co'
+const SUPABASE_ANON_KEY = 'sb_publishable_GR0iGQkSaD0yIkS5jop4eQ_uzFybXKQ'
 
-// التحقق من وجود المتغيرات
-if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-  console.error('❌ خطأ: متغيرات Supabase مفقودة!')
-  console.error('VITE_SUPABASE_URL موجود:', !!import.meta.env.VITE_SUPABASE_URL)
-  console.error('VITE_SUPABASE_ANON_KEY موجود:', !!import.meta.env.VITE_SUPABASE_ANON_KEY)
-  console.warn('⚠️ استخدام القيم الافتراضية للاختبار')
-} else {
-  console.log('✅ متغيرات Supabase موجودة وصحيحة')
-}
+// محاولة الحصول من المتغيرات البيئية، وإلا استخدام القيم الثابتة
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || SUPABASE_URL
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || SUPABASE_ANON_KEY
+
+console.log('🔧 تهيئة Supabase...')
+console.log('URL:', supabaseUrl ? '✅ موجود' : '❌ مفقود')
+console.log('Key:', supabaseAnonKey ? '✅ موجود' : '❌ مفقود')
 
 // إنشاء Supabase client
-export const supabase = createClient(supabaseUrl, supabaseAnonKey) 
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
+console.log('✅ تم إنشاء Supabase client بنجاح') 
