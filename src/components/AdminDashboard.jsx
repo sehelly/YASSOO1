@@ -18,6 +18,7 @@ import {
   FileText
 } from 'lucide-react';
 import ImageUpload from './ImageUpload';
+import { supabaseAdmin } from '../lib/supabase-admin';
 
 const AdminDashboard = ({ onLogout }) => {
   const [activeTab, setActiveTab] = useState('products');

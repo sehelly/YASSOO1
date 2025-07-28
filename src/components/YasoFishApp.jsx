@@ -5,6 +5,7 @@ import OrdersPage from './OrdersPage';
 import ProfilePage from './ProfilePage';
 import CheckoutPage from './CheckoutPage';
 import NotificationsPage from './NotificationsPage';
+import AdminLogin from './AdminLogin';
 import ContactPage from './ContactPage';
 
 const YasoFishApp = () => {
@@ -237,8 +238,7 @@ const YasoFishApp = () => {
     return filtered;
   };
 
-  // دوال إدارة لوحة التحكم - معطلة مؤقتًا
-  /*
+  // دوال إدارة لوحة التحكم
   const handleAdminLogin = (adminData) => {
     setAdminUser(adminData);
     setShowAdminLogin(false);
@@ -268,7 +268,6 @@ const YasoFishApp = () => {
       });
     }
   }, [adminUser, AdminDashboardComponent]);
-  */
 
   // واجهة البداية المحدثة
   const HomePage = () => (
@@ -311,7 +310,6 @@ const YasoFishApp = () => {
                 </span>
               )}
             </div>
-            {/* زر لوحة التحكم - معطل مؤقتًا
             <div className="relative">
               <Shield 
                 className="w-7 h-7 text-green-600 cursor-pointer" 
@@ -319,7 +317,6 @@ const YasoFishApp = () => {
                 title="لوحة التحكم"
               />
             </div>
-            */}
           </div>
         </div>
 
@@ -526,8 +523,7 @@ const YasoFishApp = () => {
 
   // عرض الصفحة المناسبة
   const renderCurrentPage = () => {
-    // عرض لوحة التحكم إذا كان المدير مسجل دخول - معطل مؤقتًا
-    /*
+    // عرض لوحة التحكم إذا كان المدير مسجل دخول
     if (adminUser) {
       if (!AdminDashboardComponent) {
         return (
@@ -541,14 +537,11 @@ const YasoFishApp = () => {
       }
       return <AdminDashboardComponent onLogout={handleAdminLogout} />;
     }
-    */
 
-    // عرض صفحة تسجيل دخول المدير - معطل مؤقتًا
-    /*
+    // عرض صفحة تسجيل دخول المدير
     if (showAdminLogin) {
       return <AdminLogin onLogin={handleAdminLogin} onBack={handleBackToSite} />;
     }
-    */
 
     switch (currentPage) {
       case 'home':

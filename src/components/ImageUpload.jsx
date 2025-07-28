@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Upload, X, Image as ImageIcon, CheckCircle, AlertCircle } from 'lucide-react';
-import { supabase } from '../lib/supabase-client';
+import { supabaseAdmin } from '../lib/supabase-admin';
 import { getStorageConfig } from '../config/app';
 
 const ImageUpload = ({ onUpload, onCancel, folder = 'products' }) => {
@@ -58,7 +58,7 @@ const ImageUpload = ({ onUpload, onCancel, folder = 'products' }) => {
       const storageConfig = getStorageConfig();
       
       // رفع الصورة إلى Supabase Storage
-      const { data, error } = await supabase.storage
+      const { data, error } = await supabaseAdmin.storage
         .from(storageConfig.bucket)
         .upload(filePath, selectedFile, {
           cacheControl: '3600',
@@ -70,7 +70,7 @@ const ImageUpload = ({ onUpload, onCancel, folder = 'products' }) => {
       }
 
       // الحصول على رابط الصورة العامة
-      const { data: { publicUrl } } = supabase.storage
+      const { data: { publicUrl } } = supabaseAdmin.storage
         .from(storageConfig.bucket)
         .getPublicUrl(filePath);
 
