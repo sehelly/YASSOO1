@@ -4,60 +4,66 @@ import { create } from 'zustand'
 export const useAdminStore = create((set, get) => ({
   // بيانات المنتجات
   products: [
-    {
-      id: 1,
-      name: 'فسيخ بلدي درجة أولى',
-      price: 45,
-      originalPrice: 50,
-      unit: 'كيلو',
-      image: '🐟',
-      category: 'فسيخ',
-      description: 'فسيخ بلدي طازج ومملح بعناية فائقة، تم اصطياده من البحر الأبيض المتوسط',
-      rating: 4.8,
-      reviews: 156,
-      inStock: true,
-      discount: 10,
-      images: ['🐟', '🐠', '🐡'],
-      nutrition: { protein: '18g', fat: '12g', calories: '180' },
-      origin: 'الإسكندرية',
-      stock: 50
-    },
-    {
-      id: 2,
-      name: 'سردين مملح فاخر',
-      price: 35,
-      originalPrice: 40,
-      unit: 'كيلو',
-      image: '🐠',
-      category: 'سردين',
-      description: 'سردين مملح عالي الجودة ومعبأ في زيت الزيتون الطبيعي',
-      rating: 4.6,
-      reviews: 89,
-      inStock: true,
-      discount: 12,
-      images: ['🐠', '🐟', '🐡'],
-      nutrition: { protein: '20g', fat: '10g', calories: '165' },
-      origin: 'دمياط',
-      stock: 30
-    },
-    {
-      id: 3,
-      name: 'رنجة مدخنة مميزة',
-      price: 55,
-      originalPrice: 65,
-      unit: 'كيلو',
-      image: '🐡',
-      category: 'رنجة',
-      description: 'رنجة مدخنة بالطريقة التقليدية مع التوابل الطبيعية',
-      rating: 4.9,
-      reviews: 203,
-      inStock: true,
-      discount: 15,
-      images: ['🐡', '🐠', '🐟'],
-      nutrition: { protein: '22g', fat: '15g', calories: '210' },
-      origin: 'بورسعيد',
-      stock: 40
-    }
+          {
+        id: 1,
+        name: 'فسيخ بلدي درجة أولى',
+        price: 45,
+        originalPrice: 50,
+        unit: 'كيلو',
+        image: '🐟',
+        imageUrl: null, // صورة المنتج الحقيقية
+        category: 'فسيخ',
+        description: 'فسيخ بلدي طازج ومملح بعناية فائقة، تم اصطياده من البحر الأبيض المتوسط',
+        rating: 4.8,
+        reviews: 156,
+        inStock: true,
+        discount: 10,
+        images: ['🐟', '🐠', '🐡'],
+        imageUrls: [], // صور المنتج الحقيقية
+        nutrition: { protein: '18g', fat: '12g', calories: '180' },
+        origin: 'الإسكندرية',
+        stock: 50
+      },
+          {
+        id: 2,
+        name: 'سردين مملح فاخر',
+        price: 35,
+        originalPrice: 40,
+        unit: 'كيلو',
+        image: '🐠',
+        imageUrl: null, // صورة المنتج الحقيقية
+        category: 'سردين',
+        description: 'سردين مملح عالي الجودة ومعبأ في زيت الزيتون الطبيعي',
+        rating: 4.6,
+        reviews: 89,
+        inStock: true,
+        discount: 12,
+        images: ['🐠', '🐟', '🐡'],
+        imageUrls: [], // صور المنتج الحقيقية
+        nutrition: { protein: '20g', fat: '10g', calories: '165' },
+        origin: 'دمياط',
+        stock: 30
+      },
+          {
+        id: 3,
+        name: 'رنجة مدخنة مميزة',
+        price: 55,
+        originalPrice: 65,
+        unit: 'كيلو',
+        image: '🐡',
+        imageUrl: null, // صورة المنتج الحقيقية
+        category: 'رنجة',
+        description: 'رنجة مدخنة بالطريقة التقليدية مع التوابل الطبيعية',
+        rating: 4.9,
+        reviews: 203,
+        inStock: true,
+        discount: 15,
+        images: ['🐡', '🐠', '🐟'],
+        imageUrls: [], // صور المنتج الحقيقية
+        nutrition: { protein: '22g', fat: '15g', calories: '210' },
+        origin: 'بورسعيد',
+        stock: 40
+      }
   ],
 
   // بيانات الفروع
@@ -103,7 +109,8 @@ export const useAdminStore = create((set, get) => ({
     mainEmail: 'info@yaso-fish.com',
     
     // الشعار والصور
-    logo: '🐟',
+    logo: '🐟', // سيتم تغييره لصورة حقيقية
+    logoImage: null, // صورة اللوجو الحقيقية
     coverImage: '🌊',
     favicon: '🐟',
     
