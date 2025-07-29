@@ -28,6 +28,7 @@ const AdminDashboard = ({ onLogout }) => {
   const [showAddProduct, setShowAddProduct] = useState(false);
   const [showAddBranch, setShowAddBranch] = useState(false);
   const [showAddSocial, setShowAddSocial] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('الكل');
 
   // استخدام المتجر المركزي
   const {
@@ -317,7 +318,6 @@ const AdminDashboard = ({ onLogout }) => {
   };
 
   const renderProducts = () => {
-    const [selectedCategory, setSelectedCategory] = useState('الكل');
     const categories = ['الكل', ...new Set(products.map(product => product.category))];
     const filteredProducts = selectedCategory === 'الكل' 
       ? products 
